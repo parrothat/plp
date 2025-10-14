@@ -1,0 +1,105 @@
+name: Build PLP (Windows, macOS, Linux)
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [published]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install pyqt6 pyinstaller ffmpeg-python
+
+      - name: Build PLP EXE with icon
+        run: |
+          pyinstaller --noconfirm --onefile plp1.0.py --icon=plp_logo.ico --name ParsLocalPlayer
+          mkdir build_files
+          copy plp_logo.bmp build_files\
+          copy plp_logo.png build_files\
+          copy plp_logo.ico build_files\
+          copy LICENSE.txt build_files\
+          copy README.md build_files\
+          move dist\ParsLocalPlayer.exe build_files\
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+
+      - name: Build Installer
+        run: |
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" plp-installer-1.0-86_64x.iss
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PLP-Windows
+          path: |
+            build_files/
+            Output/*.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          brew install ffmpeg
+          pip install pyqt6 pyinstaller ffmpeg-python
+
+      - name: Build macOS App
+        run: |
+          pyinstaller --noconfirm --onefile plp1.0.py --icon=plp_logo.png --name ParsLocalPlayer
+          mkdir build_files
+          cp plp_logo.* LICENSE.txt README.md build_files/
+          mv dist/ParsLocalPlayer build_files/ParsLocalPlayer-macOS
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PLP-macOS
+          path: build_files/
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y ffmpeg
+          pip install pyqt6 pyinstaller ffmpeg-python
+
+      - name: Build Linux Binary
+        run: |
+          pyinstaller --noconfirm --onefile plp1.0.py --name ParsLocalPlayer
+          mkdir build_files
+          cp plp_logo.* LICENSE.txt README.md build_files/
+          mv dist/ParsLocalPlayer build_files/ParsLocalPlayer-linux
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PLP-Linux
+          path: build_files/
