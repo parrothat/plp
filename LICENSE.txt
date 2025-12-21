@@ -1,0 +1,57 @@
+Copyright (c) 2025 ParrotHat Foundation
+
+This software is licensed under the Parrot Free License (PFL) Version 1.0.
+See the full license text below.
+
+----------------------------------------------------------------
+
+Parrot Free License (PFL) — Version 1.0
+
+1. Permission to Use
+The User is granted the right to operate and utilize the Software for any lawful purpose,
+in both private and commercial environments.
+Attribution is not required when the Software is only used and not redistributed.
+
+2. Access to Source Code
+When the Software is distributed, the corresponding source code
+must be made accessible without obstruction.
+It must be provided in a form suitable for modification and compilation
+using non-proprietary tools.
+
+3. Modification and Derivative Works
+Users may modify the Software and create derivative works.
+Derivatives must remain licensed under the Parrot Free License
+and must document all modifications while preserving original authorship notices.
+
+4. Redistribution Obligations
+Redistribution requires inclusion of this License unaltered,
+preservation of authorship notices, and availability of the corresponding source code.
+Modified copies must state that modifications are present.
+
+5. Copyleft and Compatibility
+Derivative works may not be relicensed under more restrictive terms.
+Combining PFL components with proprietary modules is allowed
+only when the proprietary parts remain completely separable.
+
+6. Network and Remote Use
+If modified Software is used through a public or private service,
+Users interacting with the Software must have access to the corresponding source code.
+
+7. Trademark and Identity
+This License does not grant rights to use ParrotHat Foundation trademarks.
+Such identifiers may only be used as attribution where required.
+
+8. Warranty and Liability
+The Software is provided without warranty of any kind.
+The Provider shall not be held liable for damages resulting from use,
+modification, or redistribution.
+
+9. Termination
+Rights under this License terminate automatically
+if the User violates the redistribution, copyleft, or authorship-preservation requirements.
+
+10. Future Versions
+The ParrotHat Foundation may publish updated versions of this License.
+Users may choose to adopt a later version unless explicitly restricted.
+
+End of Document — Parrot Free License (PFL) Version 1.0
