@@ -1,4 +1,4 @@
-# PLP 2.2 (FIXED) — QtMultimedia FFmpeg backend + HW decode + crash-proof metadata
+# PLP 2.1 — QtMultimedia FFmpeg backend + HW decode + crash-proof metadata
 # Python 3.10+ (tested idea for 3.11)
 # Notes:
 # - Set env BEFORE importing PyQt6
