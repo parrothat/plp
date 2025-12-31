@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Pars Local Player
+Exec=plp
+Icon=plp
+Categories=AudioVideo;Player;
+Terminal=false
