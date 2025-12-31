@@ -68,7 +68,11 @@ jobs:
       - name: Install deps
         run: |
           sudo apt update
-          sudo apt install -y ffmpeg wget fuse
+          sudo apt install -y \
+            ffmpeg \
+            wget \
+            fuse \
+            imagemagick
           pip install pyinstaller PyQt6
 
       - name: Build app dir (onedir)
@@ -90,7 +94,9 @@ jobs:
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
 
           cp dist/plp/plp AppDir/usr/bin/plp
-          cp plp_logo.png AppDir/usr/share/icons/hicolor/256x256/apps/plp.png
+
+          # 🔥 FIX ICON SIZE (500x500 -> 256x256)
+          convert plp_logo.png -resize 256x256 AppDir/usr/share/icons/hicolor/256x256/apps/plp.png
 
           cat > AppDir/usr/share/applications/plp.desktop << 'EOF'
           [Desktop Entry]
