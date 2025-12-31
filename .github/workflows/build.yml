@@ -1,20 +1,19 @@
-name: Build PLP Linux (Executable)
+name: Build PLP (ELF + AppImage + macOS)
 
 on:
   push:
-    branches: [ "main" ]
+    tags: ["v*"]
   workflow_dispatch:
 
 jobs:
-  build-linux:
+  linux-elf:
+    name: Linux ELF
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -29,39 +28,100 @@ jobs:
 
       - name: Install Python deps
         run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r requirements.txt
+          pip install pyinstaller PyQt6
 
-      - name: Build PLP with PyInstaller
+      - name: Build ELF binary
         run: |
           pyinstaller \
-            --noconfirm \
-            --clean \
             --onefile \
-            --windowed \
-            --name "plp2.1" \
-            --icon=plp_logo.ico \
-            --hidden-import=PyQt6 \
-            --hidden-import=PyQt6.QtCore \
-            --hidden-import=PyQt6.QtGui \
-            --hidden-import=PyQt6.QtWidgets \
-            --hidden-import=PyQt6.QtMultimedia \
-            --hidden-import=PyQt6.QtMultimediaWidgets \
-            --hidden-import=PyQt6.QtSvg \
-            --collect-all PyQt6 \
-            --add-data "plp_logo.ico:." \
-            --add-data "plp_logo.png:." \
+            --clean \
+            --name plp \
+            --icon plp_logo.ico \
             --add-data "fonts:fonts" \
             --add-data "icons:icons" \
-            plp2.1.py
+            --add-data "plp_logo.png:." \
+            --add-data "plp_logo.ico:." \
+            plp2.1.1.py
 
-      - name: Make binary executable
-        run: |
-          chmod +x dist/plp2.1
-
-      - name: Upload executable
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: plp-2.1-linux-x64
-          path: dist/plp2.1
+          name: plp-linux-elf
+          path: dist/plp
+
+  linux-appimage:
+    name: Linux AppImage
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          sudo apt update
+          sudo apt install -y ffmpeg wget fuse
+          pip install pyinstaller PyQt6
+
+      - name: Build app dir (onedir)
+        run: |
+          pyinstaller \
+            --clean \
+            --name plp \
+            --icon plp_logo.ico \
+            --add-data "fonts:fonts" \
+            --add-data "icons:icons" \
+            --add-data "plp_logo.png:." \
+            --add-data "plp_logo.ico:." \
+            plp2.1.1.py
+
+      - name: Build AppImage
+        run: |
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage
+
+          mkdir -p AppDir/usr/bin
+          cp dist/plp/plp AppDir/usr/bin/
+
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --output appimage
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PLP-x86_64.AppImage
+          path: "*.AppImage"
+
+  macos-app:
+    name: macOS .app
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          pip install pyinstaller PyQt6
+
+      - name: Build .app
+        run: |
+          pyinstaller \
+            --windowed \
+            --name PLP \
+            --icon plp_logo.ico \
+            --add-data "fonts:fonts" \
+            --add-data "icons:icons" \
+            --add-data "plp_logo.png:." \
+            --add-data "plp_logo.ico:." \
+            plp2.1.1.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PLP-macOS.app
+          path: dist/PLP.app
