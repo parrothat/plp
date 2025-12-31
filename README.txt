@@ -57,6 +57,11 @@ This behavior is intentional.
 - VAAPI-compatible GPU recommended
 - FFmpeg-supported codecs available
 
+### macOS
+- a Metal supported GPU
+- Apple Silicon CPU
+
+
 
 ## Installation (Windows)
 
